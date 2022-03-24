@@ -8,6 +8,7 @@ Code Summary:
 
 import pandas as pd
 from scipy import stats
+from sympy import *
 
 # meaningful numerical columns: amount, oldbalanceOrg, newbalanceOrig, oldbalanceDest, newbalanceDest
 
@@ -25,30 +26,29 @@ def getSummary(df, column):
 
 
 # As { x } increases,  { y } moves with it
+# Is there a relationship between water salinity & water temperature?
 def getCorrelative(df, x_col, y_col):
-    # Is there a relationship between water salinity & water temperature?
-    # Can you predict the water temperature based on salinity?
-    new_df = df.query('Salnty != pd.NA & T_degC != pd.NA')
-    print(new_df)
-    # new_df = df.query(f'{x_col} != "" and {y_col} != ""')
+    new_df = df[[x_col, y_col]].dropna()
+
     x = new_df[x_col]
     y = new_df[y_col]
 
-    print(x.isna())
-    print(y.isna())
+    slope, intercept, r_value, p_value, std_err = stats.linregress(x, y)
+    print(slope, intercept)
+    print(f'error: {std_err}')
 
-    # print(df.Salnty)
-
-    # slope, intercept, r_value, p_value, std_err = stats.linregress(x, y)
-    # print(slope, intercept)
-    # print(f'error: {std_err}')
-
-    return
+    return slope, intercept, std_err
 
 
 # The rate of increase, decrease is moving towards a max/min
-def getPredictive(df, column):
-    pass
+def getPredictive(df, x_col, slope, intercept, std_err):
+    x = df[x_col]  # make sure that there are no NA values
+    expr = slope * x + intercept
+    limit_expr = limit(expr, x, 0)
+
+    # search how to do limits w/ python
+
+    return
 
 
 def user_options():
@@ -69,7 +69,8 @@ def main():
     # max, min = getOutliers(df, "Salnty")
     # sum, avg = getSummary(df, "Salnty")
 
-    getCorrelative(df, "Salnty", "T_degC")
+    slope, intercept, std_err = getCorrelative(df, "Salnty", "T_degC")
+    getPredictive(df, slope, intercept, std_err)
 
     # print('Hello, and welcome to lab 3!\n')
     # ans = input('Would you like to run a function? (yes/no): ')
