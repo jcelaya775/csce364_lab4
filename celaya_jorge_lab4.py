@@ -4,6 +4,10 @@ NCC CSCE 364; Spring 2022
 Lab  #4; celaya_jorge_lab3.py
 
 Code Summary: This data set explores the correlation between water temperature and water salinity (salt level).
+
+DATA SET CAN BE DOWNLOADED HERE:
+https://www.kaggle.com/sohier/calcofi
+EXTRACT 'bottle.csv' FROM DOWNLOADED ZIP FILE
 """
 
 import pandas as pd
